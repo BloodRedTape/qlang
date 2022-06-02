@@ -4,4 +4,5 @@ project(qlang)
 
 add_executable(qlang
 	"./src/main.cpp"
- "src/lexer.hpp" "src/lexer.cpp" "src/utils.hpp")
+	"./src/lexer.cpp"
+)
