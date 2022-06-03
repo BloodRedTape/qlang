@@ -4,7 +4,7 @@
 
 
 std::vector<AstNodeRef> Parser::Parse(TokenStream tokens){
-	std::vector<AstNodeRef> ast;
+	Ast ast;
 
 	for(int i = 0; !tokens.End(); i++){
 		if (tokens.Peek().IsType(TokenType::Semicolon)) {

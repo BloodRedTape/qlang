@@ -1,5 +1,18 @@
 #include "ast/statement.hpp"
 
+const char* StatementTypeString(StatementType type){
+	switch (type) {
+	case StatementType::Empty: return "Empty";
+	case StatementType::Compound: return "Compound";
+	case StatementType::If: return "If";
+	case StatementType::Var: return "Var";
+	case StatementType::Expression: return "Expression";
+	case StatementType::For: return "For";
+	case StatementType::Return: return "Return";
+	default: return (assert(false), "Shit happens");
+	}
+}
+
 u64 AstStatement::TryParse(AstStatementRef& out_stmt, const TokenStream& stream, size_t start){
 	StatementType type = DeclStatementType(stream, start);
 	

@@ -41,3 +41,5 @@ template<typename Type, typename ...ArgsType>
 AstNodeRef AstNew(ArgsType&&...args) {
 	return std::make_unique<Type>(std::forward<ArgsType>(args)...);
 }
+
+using Ast = std::vector<AstNodeRef>;

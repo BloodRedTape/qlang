@@ -8,5 +8,5 @@
 
 class Parser {
 public:
-	static std::vector<AstNodeRef> Parse(TokenStream tokens);
+	static Ast Parse(TokenStream tokens);
 };

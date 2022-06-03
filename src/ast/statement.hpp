@@ -7,13 +7,15 @@
 
 enum class StatementType {
 	Empty		= 0,
-	Compound		= 1,
+	Compound	= 1,
 	If			= 2,
 	Var			= 3,
 	Expression	= 4,
 	For			= 5,
 	Return		= 6
 };
+
+const char *StatementTypeString(StatementType type);
 
 using AstStatementRef = std::unique_ptr<struct AstStatement>;
 

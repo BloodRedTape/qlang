@@ -18,7 +18,7 @@ u64 AstFunctionDeclaration::TryParse(const TokenStream& stream, u64 start){
 
 	if (stream.Peek(start + offset).IsKeyword(KeywordType::Extern)) {
 		Qualifiers = FunctionQualifier::Extern;
-		start += 1;
+		offset += 1;
 	}
 
 	Token fn_keyword = stream.Peek(start + offset++);
