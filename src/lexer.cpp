@@ -80,12 +80,29 @@ Token Token::IntegerLiteral(u64 value){
 }
 
 TokenAtom SymbolTable::Add(std::string identifier){
-	m_Identifiers.push_back(std::move(identifier));
-	return m_Identifiers.size() - 1;
+	TokenAtom id_atom = Find(identifier);
+
+	if(id_atom == InvalidTokenAtom){
+		m_Identifiers.push_back(std::move(identifier));
+		id_atom = m_Identifiers.size() - 1;
+	}
+
+	return id_atom;
 }
 
 const std::string& SymbolTable::operator[](size_t index) const{
 	return m_Identifiers[index];
+}
+
+TokenAtom SymbolTable::Find(const std::string& search){
+	TokenAtom atom = InvalidTokenAtom;
+	for (TokenAtom i = 0; i<m_Identifiers.size(); ++i){
+		if(m_Identifiers[i] == search){
+			atom = i;
+			break;
+		}
+	}
+	return atom;	
 }
 
 CharacterStream::CharacterStream(std::string data):

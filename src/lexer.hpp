@@ -79,6 +79,8 @@ public:
 	TokenAtom Add(std::string identifier);
 
 	const std::string& operator[](size_t index)const;
+
+	TokenAtom Find(const std::string &identifier);
 };
 
 class CharacterStream {
