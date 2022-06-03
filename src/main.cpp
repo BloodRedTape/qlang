@@ -2,32 +2,15 @@
 #include "lexer.hpp"
 #include "parser.hpp"
 #include "print.hpp"
+#include "ast/function.hpp"
+#include "ast/statement.hpp"
+#include "ast/ast.hpp"
 
 const char *src = R"(
 
-fn Add(int a, int b): int{
-    return a + b;
-}
-
-extern fn Println(int number): void;
-
-fn Factorial(int num): int{
-    if(num == 0)
-        return 1;
-    else
-        return Factorial(num - 1) * num;
-}
 
 fn Main(): int{
-    int[5] table;
-
-    for(int i = 0; i<5; i++)
-        table[i] = Factorial(i);
-
-    for(int i = 0; i<5; i++)
-        Println(table[i]);
-
-    return 0;
+	int n;
 }
 
 )";
@@ -43,6 +26,29 @@ void PrintTokenStream(const std::vector<Token>& tokens, const SymbolTable& table
     }
 }
 
+void PrintStatement(const AstStatement* stmt, const SymbolTable &table) {
+    switch (stmt->StmtType) {
+    case StatementType::Empty:
+        Print(";");
+        break;
+    case StatementType::Compound:{
+        Print("{");
+        CompoundStatement *compound = (CompoundStatement*)stmt;
+        for(const AstStatementRef &stmt: compound->Statements)
+            PrintStatement(stmt.get(), table);
+        Print("}");
+    }break;
+    case StatementType::Var: {
+        VarStatement *var = (VarStatement*)stmt;
+        
+        Print("% %", KeywordTypeString(var->DataType), table[var->IdentifierIndex]);
+        assert(!var->InitialValue);
+    }break;
+    default:
+        assert(false);
+    }
+}
+
 void PrintAst(const std::vector<AstNodeRef> &ast, const SymbolTable& table) {
     for (const AstNodeRef& node : ast) {
         switch (node->Type) {
@@ -54,7 +60,7 @@ void PrintAst(const std::vector<AstNodeRef> &ast, const SymbolTable& table) {
             );
             Print("(");
             for(int i = 0; decl->Parameters.size(); i++){
-                AstVariableDefinition param = decl->Parameters[i];
+                FunctionParamDecl param = decl->Parameters[i];
                 Print("% %", KeywordTypeString(param.DataType), table[param.IdentifierIndex]);
                 if(i == decl->Parameters.size() - 1)
                     break;
@@ -62,11 +68,14 @@ void PrintAst(const std::vector<AstNodeRef> &ast, const SymbolTable& table) {
             }
             Println("):%", KeywordTypeString(decl->ReturnType));
 
+            if (decl->Body)
+                PrintStatement(&*decl->Body, table);
+
         }break;
-        case AstNodeType::FunctionDefinition:
-            break;
-        case AstNodeType::VariableDefinition:
-            break;
+        case AstNodeType::Statement: {
+            AstStatement *stmt = (AstStatement*)node.get();
+            PrintStatement(stmt, table);
+        }break;
         default:
             assert(false);
         }

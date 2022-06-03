@@ -1,5 +1,8 @@
 
 
+fn Sum(int a, int b): int 
+	return a + b;
+
 extern fn Println(int number): void;
 
 fn Main(): int {
