@@ -38,6 +38,7 @@ enum class KeywordType {
 	Else	= 4,
 	Return	= 5,
 	For		= 6,
+	Void    = 7,
 	//While = 7
 	Count
 };
@@ -46,6 +47,8 @@ const char *KeywordTypeString(KeywordType type);
 
 using TokenAtom = u64;
 
+constexpr TokenAtom InvalidTokenAtom = -1;
+
 struct Token {
 	TokenType Type = TokenType::None;
 	union {
@@ -53,6 +56,12 @@ struct Token {
 		TokenAtom IdentifierIndex;
 		u64 IntegerLiteralValue;
 	};
+
+	bool IsKeyword(KeywordType keyword)const;
+
+	bool IsType(TokenType type)const;
+
+	bool IsDataType()const;
 	
 	static Token Regular(TokenType type);
 

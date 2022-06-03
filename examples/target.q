@@ -1,5 +1,5 @@
 
-extern fn Println(int number);
+extern fn Println(int number): void;
 
 fn Factorial(int num): int{
     if(num == 0)

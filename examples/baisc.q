@@ -1,6 +1,6 @@
 
 
-extern fn Println(int number);
+extern fn Println(int number): void;
 
 fn Main(): int {
 	int n = 3 * (4 + 2) + 4 * 4 + 3;

@@ -39,8 +39,22 @@ const char* KeywordTypeString(KeywordType type){
 	case KeywordType::Else: return "else";
 	case KeywordType::Return: return "return";
 	case KeywordType::For: return "for";
+	case KeywordType::Void: return "void";
 	default: return (assert(false), "Shit happens");
 	}
+}
+
+bool Token::IsKeyword(KeywordType keyword)const{
+	return IsType(TokenType::Keyword) && KeywordIndex == keyword;
+}
+
+bool Token::IsType(TokenType type)const{
+	return Type == type;
+}
+
+bool Token::IsDataType() const{
+	return IsKeyword(KeywordType::Int)
+		|| IsKeyword(KeywordType::Void);
 }
 
 Token Token::Regular(TokenType type){
