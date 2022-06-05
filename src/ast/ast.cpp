@@ -13,7 +13,7 @@ void TokenStream::Consume(u64 count){
 Token TokenStream::Peek(u64 offset) const{
 	assert(!End());
 	if(m_Current + offset >= m_Data.size())
-		return Token::Regular(TokenType::None);
+		return Token::Regular(TokenType::None, 0);
 	return m_Data[m_Current + offset];
 }
 

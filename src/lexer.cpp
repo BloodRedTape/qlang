@@ -58,30 +58,36 @@ bool Token::IsDataType() const{
 		|| IsKeyword(KeywordType::Void);
 }
 
-Token Token::Regular(TokenType type){
-	return {type};
+Token Token::Regular(TokenType type, u64 line){
+	Token token;
+	token.Type = type;
+	token.Line = line;
+	return token;
 }
 
-Token Token::Identifier(TokenAtom identifier_index){
+Token Token::Identifier(TokenAtom identifier_index, u64 line){
 	Token token = {TokenType::Identifier};
 	token.IdentifierIndex = identifier_index;
+	token.Line = line;
 	return token;
 }
 
-Token Token::Keyword(KeywordType keyword_index){
+Token Token::Keyword(KeywordType keyword_index, u64 line){
 	Token token = {TokenType::Keyword};
 	token.KeywordIndex = keyword_index;
+	token.Line = line;
 	return token;
 }
 
-Token Token::IntegerLiteral(u64 value){
+Token Token::IntegerLiteral(u64 value, u64 line){
 	Token token = {TokenType::IntegerLiteral};
 	token.IntegerLiteralValue = value;
+	token.Line = line;
 	return token;
 }
 
 std::ostream& operator<<(std::ostream& stream, const Token& token) {
-	stream << TokenTypeString(token.Type);
+	stream << TokenTypeString(token.Type) << "[line:" << token.Line << "]";
 	return stream;
 }
 
@@ -194,21 +200,25 @@ std::vector<Token> Lexer::DoLexicalAnalysis(const std::string& sources, SymbolTa
 	std::vector<Token> tokens;
 	CharacterStream chars(sources);
 
+	u64 line = 0;
+
 	while (!chars.End()) {
 		if (chars.Peek() == ' ' || IsEscape(chars.Peek())) {
+			if(chars.Peek() == '\n')
+				line += 1;
 			chars.Consume();
 			continue;
 		}
 			
 		TokenType token_type;
 		if(TryConsumeSingleCharToken(chars, token_type)){
-			tokens.push_back(Token::Regular(token_type));
+			tokens.push_back(Token::Regular(token_type, line));
 			continue;
 		}
 				
 		u64 number = 0;
 		if (TryConsumeInteger(chars, number)) {
-			tokens.push_back(Token::IntegerLiteral(number));
+			tokens.push_back(Token::IntegerLiteral(number, line));
 			continue;
 		}
 
@@ -225,9 +235,9 @@ std::vector<Token> Lexer::DoLexicalAnalysis(const std::string& sources, SymbolTa
 			}
 
 			if(keyword != KeywordType::Count)
-				tokens.push_back(Token::Keyword(keyword));
+				tokens.push_back(Token::Keyword(keyword, line));
 			else
-				tokens.push_back(Token::Identifier(table.Add(std::move(word))));
+				tokens.push_back(Token::Identifier(table.Add(std::move(word)), line));
 
 			continue;
 		}

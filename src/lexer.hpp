@@ -56,6 +56,7 @@ struct Token {
 		TokenAtom IdentifierIndex;
 		u64 IntegerLiteralValue;
 	};
+	u64 Line = 0;
 
 	bool IsKeyword(KeywordType keyword)const;
 
@@ -63,13 +64,13 @@ struct Token {
 
 	bool IsDataType()const;
 	
-	static Token Regular(TokenType type);
+	static Token Regular(TokenType type, u64 line);
 
-	static Token Identifier(TokenAtom identifier_index);
+	static Token Identifier(TokenAtom identifier_index, u64 line);
 
-	static Token Keyword(KeywordType keyword_index);
+	static Token Keyword(KeywordType keyword_index, u64 line);
 
-	static Token IntegerLiteral(u64 value);
+	static Token IntegerLiteral(u64 value, u64 line);
 
 	friend std::ostream& operator<<(std::ostream& stream, const Token& token);
 };
