@@ -106,5 +106,10 @@ u64 VarStatement::TryParse(const TokenStream& stream, u64 start){
 	if(!stream.Peek(start + 2).IsType(TokenType::Equal))
 		return 0;
 	
-	return 0;
+	u64 count = Expression::TryParse(InitialValue, stream, start + 3);
+
+	if(!count)
+		return 0;
+
+	return count + 3;
 }

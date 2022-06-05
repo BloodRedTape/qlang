@@ -1,28 +1,43 @@
 #pragma once
 
 #include <memory>
+#include "ast.hpp"
 
 enum class ExpressionType {
 	None = 0,
-	Literal,
+	IntegerLiteral,
 	Variable,
 	UnaryOperator,
 	BinaryOperator,
 	Call
 };
 
+using ExpressionRef = std::unique_ptr<struct Expression>;
+
+template<typename Type, typename ...ArgsType>
+ExpressionRef ExprNew(ArgsType&&...args) {
+	return std::make_unique<Type>(std::forward<ArgsType>(args)...);
+}
+
 struct Expression {
 	ExpressionType Type = ExpressionType::None;
 	//some type identifier for expression result type
-	//for now all expressions results in int
+	//for now expr result type is represented as keyword
+	KeywordType ResultType = KeywordType::Count;
+
+	virtual ~Expression() = default;
+
+	static u64 TryParse(ExpressionRef &expr, const TokenStream &stream, u64 start);
 };
 
-using ExpressionRef = std::unique_ptr<struct Expression>;
-
-struct LiteralExpression : Expression {
+struct IntegerLiteralExpression : Expression {
 	u64 Value = 0;
 
-	LiteralExpression() {Type = ExpressionType::Literal; }
+	IntegerLiteralExpression(u64 value) {
+		Type = ExpressionType::IntegerLiteral; 
+		ResultType = KeywordType::Int;
+		Value = value;
+	}
 };
 
 struct VariableExpression : Expression {

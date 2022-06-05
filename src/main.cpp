@@ -17,10 +17,10 @@ fn SomeWierdFunc(int a, int b): int{
 
 fn Main(int argc): int{
 	int n;
-    int d;
+    int d = 3;
 
     {
-        int d;
+        int d = 5;
         int c;
         {}
     }

@@ -16,7 +16,9 @@ private:
 
 	void PrintIndent(std::ostream &stream);
 private:
-	void PrintAstNode(std::ostream& stream, const AstNodeRef& ast, const SymbolTable& table);
+	void PrintAstNode(std::ostream &stream, const AstNodeRef& ast, const SymbolTable& table);
 	
-	void PrintStatement(std::ostream& stream, const AstStatement* stmt, const SymbolTable& table);
+	void PrintStatement(std::ostream &stream, const AstStatement* stmt, const SymbolTable &table);
+
+	void PrintExpression(std::ostream &stream, const ExpressionRef &expr, const SymbolTable &table);
 };

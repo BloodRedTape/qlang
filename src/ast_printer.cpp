@@ -70,6 +70,24 @@ void AstPrinter::PrintStatement(std::ostream& stream, const AstStatement *stmt, 
 		stream << "VarStatement";
 		VarStatement *var = (VarStatement*)stmt;
 		stream << "<" << KeywordTypeString(var->DataType) << ">: " << table[var->IdentifierIndex] << '\n';
+		if(var->InitialValue){
+			Indent();
+			PrintIndent(stream);
+			PrintExpression(stream, var->InitialValue, table);
+			UnIndent();
+		}
+	}break;
+	default:
+		assert(false);
+	}
+}
+
+void AstPrinter::PrintExpression(std::ostream& stream, const ExpressionRef& expr_ptr, const SymbolTable& table){
+	Expression *expr = expr_ptr.get();
+	switch (expr->Type) {
+	case ExpressionType::IntegerLiteral: {
+		IntegerLiteralExpression *literal = (IntegerLiteralExpression*)expr;
+		stream << "IntegerLiteral: $" << literal->Value << '\n';
 	}break;
 	default:
 		assert(false);
