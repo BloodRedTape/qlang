@@ -43,7 +43,10 @@ struct IntegerLiteralExpression : Expression {
 struct VariableExpression : Expression {
 	TokenAtom IdentifierIndex = InvalidTokenAtom;
 
-	VariableExpression() {Type = ExpressionType::Variable; }
+	VariableExpression(TokenAtom identifier) {
+		Type = ExpressionType::Variable; 
+		IdentifierIndex = identifier;
+	}
 };
 
 enum class UnaryOperatorType {

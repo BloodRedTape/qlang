@@ -21,7 +21,7 @@ fn Main(int argc): int{
 
     {
         int d = 5;
-        int c;
+        int c = d;
         {}
     }
 

@@ -89,6 +89,10 @@ void AstPrinter::PrintExpression(std::ostream& stream, const ExpressionRef& expr
 		IntegerLiteralExpression *literal = (IntegerLiteralExpression*)expr;
 		stream << "IntegerLiteral: $" << literal->Value << '\n';
 	}break;
+	case ExpressionType::Variable: {
+		VariableExpression *var = (VariableExpression*)expr;
+		stream << "Variable<>: " << table[var->IdentifierIndex]<< '\n';
+	}break;
 	default:
 		assert(false);
 	}
