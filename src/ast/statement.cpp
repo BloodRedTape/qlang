@@ -79,8 +79,12 @@ u64 CompoundStatement::TryParse(const TokenStream& stream, size_t start){
 		if (!count)
 			break;
 
-		Statements.push_back(std::move(stmt));
 		offset += count;
+
+		if(stmt->StmtType == StatementType::Empty)
+			continue;
+
+		Statements.push_back(std::move(stmt));
 	}
 
 	return 0;
