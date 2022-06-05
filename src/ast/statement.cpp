@@ -94,15 +94,17 @@ u64 CompoundStatement::TryParse(const TokenStream& stream, size_t start){
 		Statements.push_back(std::move(stmt));
 	}
 
-	return Error("CompoundStatement", "Can't parse iternal statement");
+	return Error("CompoundStatement", "Can't parse internal statement");
 }
 
 u64 VarStatement::TryParse(const TokenStream& stream, u64 start){
 	Token type		 = stream.Peek(start + 0);
 	Token identifier = stream.Peek(start + 1);
 
-	if(!type.IsKeyword(KeywordType::Int) || !identifier.IsType(TokenType::Identifier))
-		return 0;
+	if(!type.IsKeyword(KeywordType::Int))
+		return Error("VarStatement", "Can't parse, expected data type, got '%'", type);
+	if(!identifier.IsType(TokenType::Identifier))
+		return Error("VarStatement", "Can't parse, expected identifier, got '%'", type);
 
 	DataType = type.KeywordIndex;
 	IdentifierIndex = identifier.IdentifierIndex;
@@ -116,7 +118,7 @@ u64 VarStatement::TryParse(const TokenStream& stream, u64 start){
 	u64 count = ExpressionStatement::TryParse(InitialValue, stream, start + 3);
 
 	if(!count)
-		return 0;
+		return Error("VarStatement", "Can't parse initial assignment expression");
 
 	return count + 3;
 }

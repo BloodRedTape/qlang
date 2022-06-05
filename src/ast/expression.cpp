@@ -1,4 +1,5 @@
 #include "expression.hpp"
+#include "error.hpp"
 #include <assert.h>
 
 const char* UnaryOperatorTypeString(UnaryOperatorType type){
@@ -95,8 +96,6 @@ u64 Expression::TryParse(ExpressionRef& expr, const TokenStream& stream, u64 sta
 	std::vector<BinaryOperatorType> ops;
 	std::vector<ExpressionRef> exprs;
 
-
-
-	return 0;
+	return Error("Expression", "Unknown expression type starts with '%' of length %", stream.Peek(start), length);
 }
 
