@@ -19,6 +19,12 @@ fn Main(int argc): int{
 	int n;
     int d;
 
+    {
+        int d;
+        int c;
+        {}
+    }
+
 }
 
 )";

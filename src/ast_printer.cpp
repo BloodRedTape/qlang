@@ -69,7 +69,7 @@ void AstPrinter::PrintStatement(std::ostream& stream, const AstStatement *stmt, 
 	case StatementType::Var:{
 		stream << "VarStatement";
 		VarStatement *var = (VarStatement*)stmt;
-		stream << "<" << KeywordTypeString(var->DataType) << ">:" << table[var->IdentifierIndex] << '\n';
+		stream << "<" << KeywordTypeString(var->DataType) << ">: " << table[var->IdentifierIndex] << '\n';
 	}break;
 	default:
 		assert(false);
