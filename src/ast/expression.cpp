@@ -14,7 +14,7 @@ const char* UnaryOperatorTypeString(UnaryOperatorType type){
 
 u64 Expression::TryParse(ExpressionRef& expr, const TokenStream& stream, u64 start, u64 length){
 	
-	
+	// Non-Chainable expressions parsing
 	if(stream.HasRepeated(TokenType::Minus, 2, start)
 	&& stream.Peek(start + 2).IsType(TokenType::Identifier)) {
 		expr = ExprNew<UnaryOperatorExpression>(
@@ -71,6 +71,30 @@ u64 Expression::TryParse(ExpressionRef& expr, const TokenStream& stream, u64 sta
 		expr = ExprNew<VariableExpression>(stream.Peek(start).IdentifierIndex);
 		return 1;
 	}
+
+	if (stream.Peek(start + 0).IsType(TokenType::OpenParentheses)) {
+		u64 stack = 0;
+		for (u64 count = 0; count < length; count++) {
+			u64 offset = start + count;
+
+			if (stream.Peek(offset).IsType(TokenType::OpenParentheses))
+				stack++;
+			if (stream.Peek(offset).IsType(TokenType::CloseParentheses))
+				stack--;
+
+			if (!stack) {
+				u64 sub_count = Expression::TryParse(expr, stream, start + 1, count);
+				return sub_count ? sub_count + 2 : 0;
+			}
+		}
+		assert(expr);
+	}
+
+	// Chainable expressions parsing
+
+	std::vector<BinaryOperatorType> ops;
+	std::vector<ExpressionRef> exprs;
+
 
 
 	return 0;
