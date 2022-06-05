@@ -77,6 +77,13 @@ void AstPrinter::PrintStatement(std::ostream& stream, const AstStatement *stmt, 
 			UnIndent();
 		}
 	}break;
+	case StatementType::Expression: {
+		stream << "ExpressionStatement\n";
+		Indent();
+		PrintIndent(stream);
+		PrintExpression(stream, ((ExpressionStatement*)stmt)->Expr, table);
+		UnIndent();
+	}break;
 	default:
 		assert(false);
 	}

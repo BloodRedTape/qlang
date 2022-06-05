@@ -17,17 +17,19 @@ fn SomeWierdFunc(int a, int b): int{
 
 fn Main(int argc): int{
 	int none;
-	int n = 3;
+	int n = 3;;;;
     int neg = -n;
     int pi = n++;
     int pd = n--;
     int pri = ++n;
     int prd = --n;
-
+    
     {
         int d = 5;
         int c = d;
-        {}
+        {
+            n++;
+        }
     }
 
 }

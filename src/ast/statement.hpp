@@ -50,3 +50,13 @@ struct VarStatement : AstStatement {
 
 	u64 TryParse(const TokenStream &stream, u64 start);
 };
+
+struct ExpressionStatement : AstStatement {
+	ExpressionRef Expr;
+
+	ExpressionStatement() { StmtType = StatementType::Expression; }
+
+	static u64 TryParse(ExpressionRef &expr, const TokenStream &stream, u64 start);
+
+	u64 TryParse(const TokenStream &stream, u64 start);
+};

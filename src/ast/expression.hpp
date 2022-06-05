@@ -27,7 +27,7 @@ struct Expression {
 
 	virtual ~Expression() = default;
 
-	static u64 TryParse(ExpressionRef &expr, const TokenStream &stream, u64 start);
+	static u64 TryParse(ExpressionRef &expr, const TokenStream &stream, u64 start, u64 length);
 };
 
 struct IntegerLiteralExpression : Expression {

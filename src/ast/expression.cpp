@@ -12,7 +12,7 @@ const char* UnaryOperatorTypeString(UnaryOperatorType type){
 	}
 }
 
-u64 Expression::TryParse(ExpressionRef& expr, const TokenStream& stream, u64 start){
+u64 Expression::TryParse(ExpressionRef& expr, const TokenStream& stream, u64 start, u64 length){
 	
 	
 	if(stream.HasRepeated(TokenType::Minus, 2, start)
@@ -51,7 +51,7 @@ u64 Expression::TryParse(ExpressionRef& expr, const TokenStream& stream, u64 sta
 	// parse only after predecrement, not to be folled
 	if(stream.Peek(start).IsType(TokenType::Minus)){
 		ExpressionRef sub_expr;
-		u64 count = Expression::TryParse(sub_expr, stream, start + 1);
+		u64 count = Expression::TryParse(sub_expr, stream, start + 1, length - 1);
 		if(!count)
 			return 0;
 		expr = ExprNew<UnaryOperatorExpression>(UnaryOperatorType::Negative, std::move(sub_expr));

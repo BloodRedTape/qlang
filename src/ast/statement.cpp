@@ -34,6 +34,12 @@ u64 AstStatement::TryParse(AstStatementRef& out_stmt, const TokenStream& stream,
 		if(count)
 			return (out_stmt = StmtNew<VarStatement>(std::move(stmt)), count);
 	}break;
+	case StatementType::Expression: {
+		ExpressionStatement expr;
+		u64 count = expr.TryParse(stream, start);
+		if(count)
+			return (out_stmt = StmtNew<ExpressionStatement>(std::move(expr)), count);
+	}break;
 	default:
 		assert(false);
 	}
@@ -106,10 +112,23 @@ u64 VarStatement::TryParse(const TokenStream& stream, u64 start){
 	if(!stream.Peek(start + 2).IsType(TokenType::Equal))
 		return 0;
 	
-	u64 count = Expression::TryParse(InitialValue, stream, start + 3);
+	u64 count = ExpressionStatement::TryParse(InitialValue, stream, start + 3);
 
 	if(!count)
 		return 0;
 
 	return count + 3;
+}
+
+u64 ExpressionStatement::TryParse(const TokenStream& stream, u64 start){
+	return TryParse(Expr, stream, start);
+}
+
+u64 ExpressionStatement::TryParse(ExpressionRef& expr, const TokenStream& stream, u64 start){
+	u64 count = stream.CountUntilFirst(TokenType::Semicolon, start);
+
+	if(count == -1)
+		return 0;
+
+	return Expression::TryParse(expr, stream, start, count);
 }

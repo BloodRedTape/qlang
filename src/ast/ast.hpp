@@ -27,7 +27,7 @@ public:
 		return true;
 	}
 
-	u64 CountUntilFirst(TokenType type, u64 start) {
+	u64 CountUntilFirst(TokenType type, u64 start)const {
 		for(u64 count = 0;!End();count++) {
 			if(Peek(start + count).IsType(type))
 				return count;
