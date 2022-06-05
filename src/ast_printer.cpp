@@ -93,6 +93,14 @@ void AstPrinter::PrintExpression(std::ostream& stream, const ExpressionRef& expr
 		VariableExpression *var = (VariableExpression*)expr;
 		stream << "Variable<>: " << table[var->IdentifierIndex]<< '\n';
 	}break;
+	case ExpressionType::UnaryOperator: {
+		UnaryOperatorExpression *unary = (UnaryOperatorExpression*)expr;
+		stream << UnaryOperatorTypeString(unary->UnaryType) << "Operator\n";
+		Indent();
+		PrintIndent(stream);
+		PrintExpression(stream, unary->Expr, table);
+		UnIndent();
+	}break;
 	default:
 		assert(false);
 	}

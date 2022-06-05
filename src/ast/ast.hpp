@@ -5,6 +5,8 @@
 
 #include "lexer.hpp"
 
+constexpr u64 InvalidCount = -1;
+
 class TokenStream {
 private:
 	std::vector<Token> m_Data;
@@ -17,7 +19,23 @@ public:
 	Token Peek(u64 offset = 0)const;
 
 	bool End()const;
+
+	bool HasRepeated(TokenType type, u64 count, u64 start)const{
+		for(u64 i = 0; i<count; i++)
+			if(!Peek(start + i).IsType(type))
+				return false;
+		return true;
+	}
+
+	u64 CountUntilFirst(TokenType type, u64 start) {
+		for(u64 count = 0;!End();count++) {
+			if(Peek(start + count).IsType(type))
+				return count;
+		}
+		return InvalidCount;
+	}
 };
+
 
 enum class AstNodeType {
 	None				= 0,

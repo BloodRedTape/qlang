@@ -50,20 +50,29 @@ struct VariableExpression : Expression {
 };
 
 enum class UnaryOperatorType {
-	ArrayAccess,
-	Increment,
-	Decrement
+	Negative,
+	PreIncrement,
+	PreDecrement,
+	PostIncrement,
+	PostDecrement
 };
 
-struct UnaryOperatorExpression : Expression {
-	ExpressionRef ref;
+const char *UnaryOperatorTypeString(UnaryOperatorType type);
 
-	UnaryOperatorExpression() { Type = ExpressionType::UnaryOperator; }
+struct UnaryOperatorExpression : Expression {
+	ExpressionRef Expr;
+	UnaryOperatorType UnaryType;
+
+	UnaryOperatorExpression(UnaryOperatorType unary_type, ExpressionRef expr):
+		UnaryType(unary_type),
+		Expr(std::move(expr))
+	{ Type = ExpressionType::UnaryOperator; }
 };
 
 enum class BinaryOperatorType {
 	None = 0,
 	Assign,	
+	//ArraySubscript,
 	Add,
 	Sub,
 	Mult,
