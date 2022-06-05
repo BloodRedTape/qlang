@@ -19,8 +19,9 @@ Ast Parser::Parse(TokenStream tokens){
 			ast.push_back(AstNew<AstFunctionDeclaration>(std::move(func)));
 			continue;
 		}
-
-		assert(false);
+		
+		Error("Parser", "Can't parse top-level AST Node, Unexpected token '%'", TokenTypeString(tokens.Peek().Type));
+		break;
 	}
 
 	return ast;

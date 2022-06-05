@@ -1,6 +1,7 @@
 #include "lexer.hpp"
 #include <cmath>
 #include <sstream>
+#include <iostream>
 
 
 const char* TokenTypeString(TokenType type){
@@ -77,6 +78,11 @@ Token Token::IntegerLiteral(u64 value){
 	Token token = {TokenType::IntegerLiteral};
 	token.IntegerLiteralValue = value;
 	return token;
+}
+
+std::ostream& operator<<(std::ostream& stream, const Token& token) {
+	stream << TokenTypeString(token.Type);
+	return stream;
 }
 
 TokenAtom SymbolTable::Add(std::string identifier){

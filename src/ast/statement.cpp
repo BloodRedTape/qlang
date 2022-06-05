@@ -1,4 +1,5 @@
 #include "ast/statement.hpp"
+#include "error.hpp"
 
 const char* StatementTypeString(StatementType type){
 	switch (type) {
@@ -44,7 +45,7 @@ u64 AstStatement::TryParse(AstStatementRef& out_stmt, const TokenStream& stream,
 		assert(false);
 	}
 	
-	return 0;
+	return Error("Statement", "Can't parse '%Statement' starts with token '%'", StatementTypeString(type), stream.Peek());
 }
 
 StatementType DeclStatementType(const TokenStream& stream, size_t start){
@@ -74,7 +75,7 @@ StatementType DeclStatementType(const TokenStream& stream, size_t start){
 u64 CompoundStatement::TryParse(const TokenStream& stream, size_t start){
 	u64 offset = 0;
 	if(!stream.Peek(start + offset++).IsType(TokenType::OpenBraces))
-		return 0;
+		return Error("CompoundStatement", "Compound statement should start with OpenBraces");
 
 	for (;;) {
 		if(stream.Peek(start + offset).IsType(TokenType::CloseBraces))
@@ -93,7 +94,7 @@ u64 CompoundStatement::TryParse(const TokenStream& stream, size_t start){
 		Statements.push_back(std::move(stmt));
 	}
 
-	return 0;
+	return Error("CompoundStatement", "Can't parse iternal statement");
 }
 
 u64 VarStatement::TryParse(const TokenStream& stream, u64 start){

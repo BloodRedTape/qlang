@@ -1,4 +1,5 @@
 #include "ast/function.hpp"
+#include "error.hpp"
 
 u64 FunctionParamDecl::TryParse(const TokenStream& stream, u64 start){
 	Token type		 = stream.Peek(start + 0);
@@ -43,7 +44,7 @@ u64 AstFunctionDeclaration::TryParse(const TokenStream& stream, u64 start){
 			offset += 1;
 			continue;	
 		}
-
+		//XXX: Test against pure garbage
 		if(!count){
 			break;
 		}
@@ -58,7 +59,7 @@ u64 AstFunctionDeclaration::TryParse(const TokenStream& stream, u64 start){
 	Token ret = stream.Peek(start + offset++);
 
 	if(!ret.IsDataType())
-		return 0;
+		return Error("Function", "'%' should be a data type", ret);
 
 	ReturnType = ret.KeywordIndex;
 
@@ -70,7 +71,7 @@ u64 AstFunctionDeclaration::TryParse(const TokenStream& stream, u64 start){
 	u64 body_count = body.TryParse(stream, start + offset);
 
 	if(!body_count)
-		return 0;
+		return Error("Function", "Can't parse function body '%'", identifier);
 
 	Body = std::move(body);
 

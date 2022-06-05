@@ -70,6 +70,8 @@ struct Token {
 	static Token Keyword(KeywordType keyword_index);
 
 	static Token IntegerLiteral(u64 value);
+
+	friend std::ostream& operator<<(std::ostream& stream, const Token& token);
 };
 
 class SymbolTable {

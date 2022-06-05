@@ -17,8 +17,8 @@ fn SomeWierdFunc(int a, int b): int{
 
 fn Main(int argc): int{
 	int none;
-	int n = 3;;;;
-    int neg = -n;
+	int n = ((3));;;;
+    int neg = (-n);
     int pi = n++;
     int pd = n--;
     int pri = ++n;

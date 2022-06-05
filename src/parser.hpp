@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lexer.hpp"
+#include "error.hpp"
 #include "ast/ast.hpp"
 #include <memory>
 #include <vector>
