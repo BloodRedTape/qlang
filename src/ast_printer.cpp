@@ -84,6 +84,16 @@ void AstPrinter::PrintStatement(std::ostream& stream, const AstStatement *stmt, 
 		PrintExpression(stream, ((ExpressionStatement*)stmt)->Expr, table);
 		UnIndent();
 	}break;
+	case StatementType::While: {
+		WhileStatement *loop = (WhileStatement*)stmt;
+		stream << "WhileStatement\n";
+		Indent();
+		PrintIndent(stream);	
+		PrintExpression(stream, loop->Condition, table);
+		PrintIndent(stream);	
+		PrintStatement(stream, &loop->Body, table);
+		UnIndent();
+	}break;
 	default:
 		assert(false);
 	}

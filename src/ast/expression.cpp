@@ -85,19 +85,6 @@ u64 TryParseBinaryOperator(BinaryOperatorType& type, const TokenStream &stream, 
 	return 0;
 }
 
-u64 CountScopeSize(const TokenStream& stream, u64 start, u64 length, TokenType open, TokenType close) {
-	u64 stack = 0;
-	for (u64 count = 0; count < length; count++) {
-		if(stream.Peek(start + count).IsType(open))
-			stack++;
-		if(stream.Peek(start + count).IsType(close))
-			stack--;
-
-		if (!stack)
-			return count + 1;
-	}
-	return 0;
-}
 
 u64 FindThisScopeComma(const TokenStream& stream, u64 start, u64 length) {
 	u64 stack = 0;
@@ -190,7 +177,8 @@ u64 ParseSubexpression(ExpressionRef& expr, const TokenStream& stream, u64 start
 	&&  stream.Peek(start + 1).IsType(TokenType::OpenParentheses)) {
 		CallExpression call;
 		
-		u64 scope_length = CountScopeSize(stream, start + 1, length - 1, TokenType::OpenParentheses, TokenType::CloseParentheses);
+		u64 scope_length = stream.CountScopeSize(start + 1, TokenType::OpenParentheses, TokenType::CloseParentheses);
+		assert(scope_length <= length - 1);
 		
 		u64 offset = 2;
 		for (;;) {

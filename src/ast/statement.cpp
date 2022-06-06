@@ -8,7 +8,7 @@ const char* StatementTypeString(StatementType type){
 	case StatementType::If: return "If";
 	case StatementType::Var: return "Var";
 	case StatementType::Expression: return "Expression";
-	case StatementType::For: return "For";
+	case StatementType::While: return "While";
 	case StatementType::Return: return "Return";
 	default: return (assert(false), "Shit happens");
 	}
@@ -41,6 +41,12 @@ u64 AstStatement::TryParse(AstStatementRef& out_stmt, const TokenStream& stream,
 		if(count)
 			return (out_stmt = StmtNew<ExpressionStatement>(std::move(expr)), count);
 	}break;
+	case StatementType::While: {
+		WhileStatement loop;
+		u64 count = loop.TryParse(stream, start);
+		if(count)
+			return (out_stmt = StmtNew<WhileStatement>(std::move(loop)), count);
+	}break;
 	default:
 		assert(false);
 	}
@@ -50,6 +56,9 @@ u64 AstStatement::TryParse(AstStatementRef& out_stmt, const TokenStream& stream,
 
 StatementType DeclStatementType(const TokenStream& stream, size_t start){
 	Token first = stream.Peek(start);
+
+	if(first.Type == TokenType::None)
+		assert(false);
 
 	if(first.IsType(TokenType::Semicolon))
 		return StatementType::Empty;
@@ -63,8 +72,8 @@ StatementType DeclStatementType(const TokenStream& stream, size_t start){
 	if(first.IsDataType())
 		return StatementType::Var;
 	
-	if(first.IsKeyword(KeywordType::For))
-		return StatementType::For;
+	if(first.IsKeyword(KeywordType::While))
+		return StatementType::While;
 
 	if(first.IsKeyword(KeywordType::Return))
 		return StatementType::Return;
@@ -135,3 +144,22 @@ u64 ExpressionStatement::TryParse(ExpressionRef& expr, const TokenStream& stream
 
 	return Expression::TryParse(expr, stream, start, count);
 }
+
+u64 WhileStatement::TryParse(const TokenStream& stream, u64 start){
+	Token keyword = stream.Peek(start + 0);
+	if(!keyword.IsKeyword(KeywordType::While))
+		return Error("WhileStatement", "should start with 'while' keyword");
+	
+	u64 condition_count = stream.CountScopeSize(start + 1, TokenType::OpenParentheses, TokenType::CloseParentheses);
+
+	u64 expr_count = Expression::TryParse(Condition, stream, start + 2, condition_count - 2);
+
+	if(!expr_count)
+		return Error("WhileStatement", "Can't parse condition expr");
+
+	u64 body_count = Body.TryParse(stream, start + 1 + condition_count);
+	if(!body_count)
+		return Error("WhileStatement", "Can't parse body");
+
+	return 1 + condition_count + body_count;
+} 

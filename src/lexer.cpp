@@ -40,7 +40,7 @@ const char* KeywordTypeString(KeywordType type){
 	case KeywordType::If: return "if";
 	case KeywordType::Else: return "else";
 	case KeywordType::Return: return "return";
-	case KeywordType::For: return "for";
+	case KeywordType::While: return "while";
 	case KeywordType::Void: return "void";
 	default: return (assert(false), "Shit happens");
 	}

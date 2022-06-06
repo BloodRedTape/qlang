@@ -11,7 +11,7 @@ enum class StatementType {
 	If			= 2,
 	Var			= 3,
 	Expression	= 4,
-	For			= 5,
+	While		= 5,
 	Return		= 6
 };
 
@@ -57,6 +57,15 @@ struct ExpressionStatement : AstStatement {
 	ExpressionStatement() { StmtType = StatementType::Expression; }
 
 	static u64 TryParse(ExpressionRef &expr, const TokenStream &stream, u64 start);
+
+	u64 TryParse(const TokenStream &stream, u64 start);
+};
+
+struct WhileStatement : AstStatement {
+	ExpressionRef Condition;
+	CompoundStatement Body;
+
+	WhileStatement() { StmtType = StatementType::While; }
 
 	u64 TryParse(const TokenStream &stream, u64 start);
 };

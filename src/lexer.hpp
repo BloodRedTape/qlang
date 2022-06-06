@@ -38,7 +38,7 @@ enum class KeywordType {
 	If		= 3,
 	Else	= 4,
 	Return	= 5,
-	For		= 6,
+	While	= 6,
 	Void    = 7,
 	//While = 7
 	Count

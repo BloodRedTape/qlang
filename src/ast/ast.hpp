@@ -43,6 +43,20 @@ public:
 		}
 		return InvalidCount;
 	}
+
+	u64 CountScopeSize(u64 start, TokenType open, TokenType close)const {
+		u64 stack = 0;
+		for (u64 count = 0; m_Current + start + count < m_Data.size(); count++) {
+			if(Peek(start + count).IsType(open))
+				stack++;
+			if(Peek(start + count).IsType(close))
+				stack--;
+
+			if (!stack)
+				return count + 1;
+		}
+		return 0;
+	}
 };
 
 
