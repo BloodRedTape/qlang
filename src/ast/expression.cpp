@@ -85,7 +85,40 @@ u64 TryParseBinaryOperator(BinaryOperatorType& type, const TokenStream &stream, 
 	return 0;
 }
 
+u64 CountScopeSize(const TokenStream& stream, u64 start, u64 length, TokenType open, TokenType close) {
+	u64 stack = 0;
+	for (u64 count = 0; count < length; count++) {
+		if(stream.Peek(start + count).IsType(open))
+			stack++;
+		if(stream.Peek(start + count).IsType(close))
+			stack--;
+
+		if (!stack)
+			return count + 1;
+	}
+	return 0;
+}
+
+u64 FindThisScopeComma(const TokenStream& stream, u64 start, u64 length) {
+	u64 stack = 0;
+	for (u64 i = 0; i < length; i++) {
+		if(stream.Peek(start + i).IsType(TokenType::OpenParentheses)
+		|| stream.Peek(start + i).IsType(TokenType::OpenBrackets)
+		|| stream.Peek(start + i).IsType(TokenType::OpenBraces))
+			stack++;
+		if(stream.Peek(start + i).IsType(TokenType::CloseParentheses)
+		|| stream.Peek(start + i).IsType(TokenType::CloseBrackets)
+		|| stream.Peek(start + i).IsType(TokenType::CloseBraces))
+			stack--;
+		if(stream.Peek(start + i).IsType(TokenType::Comma))
+			return i;
+	}
+	return InvalidIndex;
+}
+
 u64 ParseSubexpression(ExpressionRef& expr, const TokenStream& stream, u64 start, u64 length) {
+	if(length == 0)
+		return 0;
 	if (stream.Peek(start + 0).IsType(TokenType::OpenParentheses)) {
 		u64 stack = 0;
 		for (u64 count = 0; count < length; count++) {
@@ -151,6 +184,37 @@ u64 ParseSubexpression(ExpressionRef& expr, const TokenStream& stream, u64 start
 	if (stream.Peek(start).IsType(TokenType::IntegerLiteral)) {
 		expr = ExprNew<IntegerLiteralExpression>(stream.Peek(start).IntegerLiteralValue);
 		return 1;
+	}
+
+	if (stream.Peek(start + 0).IsType(TokenType::Identifier)
+	&&  stream.Peek(start + 1).IsType(TokenType::OpenParentheses)) {
+		CallExpression call;
+		
+		u64 scope_length = CountScopeSize(stream, start + 1, length - 1, TokenType::OpenParentheses, TokenType::CloseParentheses);
+		
+		u64 offset = 2;
+		for (;;) {
+			ExpressionRef expr;
+			u64 expr_len = FindThisScopeComma(stream, start + offset, scope_length - offset);
+			u64 count = Expression::TryParse(expr, stream, start + offset, expr_len != InvalidIndex ? expr_len : scope_length - offset);
+
+			if (count) {
+				offset += count;
+				
+				TokenType end = stream.Peek(start + offset).Type;
+				if(end == TokenType::Comma || end == TokenType::CloseParentheses){
+					offset += 1;
+					call.Args.push_back(std::move(expr));
+				} else {
+					Error("CallExpression", "Unexpected token '%'", stream.Peek(start + offset));
+					break;
+				}
+				if(end == TokenType::CloseParentheses)
+					break;
+			}
+		}
+			
+		return (expr = ExprNew<CallExpression>(std::move(call)), offset);
 	}
 
 	// this check should be the last one, 

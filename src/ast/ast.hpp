@@ -28,9 +28,18 @@ public:
 	}
 
 	u64 CountUntilFirst(TokenType type, u64 start)const {
-		for(u64 count = 0;!End();count++) {
+		for(u64 count = 0;count < m_Data.size() - m_Current;count++) {
 			if(Peek(start + count).IsType(type))
 				return count;
+		}
+		return InvalidCount;
+	}
+	u64 CountUntilAny(std::initializer_list<TokenType> types, u64 start, u64 length)const {
+		for(u64 count = 0; count < length; count++) {
+			for(TokenType type: types){
+				if(Peek(start + count).IsType(type))
+					return count;
+			}
 		}
 		return InvalidCount;
 	}

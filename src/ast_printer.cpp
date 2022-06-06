@@ -118,6 +118,16 @@ void AstPrinter::PrintExpression(std::ostream& stream, const ExpressionRef& expr
 		PrintExpression(stream, binary->Right, table);
 		UnIndent();
 	}break;
+	case ExpressionType::Call: {
+		CallExpression *call = (CallExpression *)expr;
+		stream << "CallExpression\n";
+		Indent();
+		for (const auto& arg : call->Args) {
+			PrintIndent(stream);
+			PrintExpression(stream, arg, table);
+		}
+		UnIndent();
+	}break;
 	default:
 		assert(false);
 	}
