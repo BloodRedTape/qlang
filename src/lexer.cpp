@@ -1,6 +1,5 @@
 #include "lexer.hpp"
 #include "error.hpp"
-#include <cmath>
 #include <sstream>
 #include <iostream>
 
@@ -201,7 +200,7 @@ std::vector<Token> Lexer::DoLexicalAnalysis(const std::string& sources, SymbolTa
 	std::vector<Token> tokens;
 	CharacterStream chars(sources);
 
-	u64 line = 0;
+	u64 line = 1;
 
 	while (!chars.End()) {
 		if (chars.Peek() == ' ' || IsEscape(chars.Peek())) {
@@ -245,7 +244,7 @@ std::vector<Token> Lexer::DoLexicalAnalysis(const std::string& sources, SymbolTa
 			continue;
 		}
 		
-		return (Error("Lexer", "Unknown character '%' code=%", chars.Peek(), (int)chars.Peek()), std::vector<Token>());
+		return (Error("Lexer", "Unknown character '%' ascii code=%, line=%", chars.Peek(), (int)chars.Peek(), line), std::vector<Token>());
 	}
 
 	return tokens;
@@ -266,8 +265,9 @@ bool Lexer::TryConsumeInteger(CharacterStream& chars, u64& number){
 	number = 0;
 	
 	while (IsDigit(chars.Peek())){
-		number = number * std::pow(10, digits++) + ToDigit(chars.Peek());
+		number = number * 10 + ToDigit(chars.Peek());
 		chars.Consume();
+		digits++;
 	}
 
 	return digits;
