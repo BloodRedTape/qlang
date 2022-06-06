@@ -94,6 +94,16 @@ void AstPrinter::PrintStatement(std::ostream& stream, const AstStatement *stmt, 
 		PrintStatement(stream, &loop->Body, table);
 		UnIndent();
 	}break;
+	case StatementType::Return: {
+		ReturnStatement *ret = (ReturnStatement*)stmt;
+		stream << "ReturnStatement\n";
+		if(ret->Result){
+			Indent();
+			PrintIndent(stream);	
+			PrintExpression(stream, ret->Result, table);
+			UnIndent();
+		}
+	}break;
 	default:
 		assert(false);
 	}

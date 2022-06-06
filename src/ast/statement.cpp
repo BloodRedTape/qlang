@@ -47,6 +47,12 @@ u64 AstStatement::TryParse(AstStatementRef& out_stmt, const TokenStream& stream,
 		if(count)
 			return (out_stmt = StmtNew<WhileStatement>(std::move(loop)), count);
 	}break;
+	case StatementType::Return: {
+		ReturnStatement ret;
+		u64 count = ret.TryParse(stream, start);
+		if(count)
+			return (out_stmt = StmtNew<ReturnStatement>(std::move(ret)), count);
+	}break;
 	default:
 		assert(false);
 	}
@@ -139,7 +145,7 @@ u64 ExpressionStatement::TryParse(const TokenStream& stream, u64 start){
 u64 ExpressionStatement::TryParse(ExpressionRef& expr, const TokenStream& stream, u64 start){
 	u64 count = stream.CountUntilFirst(TokenType::Semicolon, start);
 
-	if(count == -1)
+	if(count == -1 || count == 0)
 		return 0;
 
 	return Expression::TryParse(expr, stream, start, count);
@@ -163,3 +169,13 @@ u64 WhileStatement::TryParse(const TokenStream& stream, u64 start){
 
 	return 1 + condition_count + body_count;
 } 
+
+u64 ReturnStatement::TryParse(const TokenStream& stream, u64 start){
+	Token keyword = stream.Peek(start + 0);
+	if(!keyword.IsKeyword(KeywordType::Return))
+		return Error("ReturnStatement", "should start with 'return' keyword");
+	
+	u64 result_count = ExpressionStatement::TryParse(Result, stream, start + 1);
+	
+	return result_count + 1;
+}

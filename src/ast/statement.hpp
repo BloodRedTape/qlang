@@ -69,3 +69,11 @@ struct WhileStatement : AstStatement {
 
 	u64 TryParse(const TokenStream &stream, u64 start);
 };
+
+struct ReturnStatement : AstStatement {
+	ExpressionRef Result;
+
+	ReturnStatement() { StmtType = StatementType::Return; }
+
+	u64 TryParse(const TokenStream &stream, u64 start);
+};
