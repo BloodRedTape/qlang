@@ -13,5 +13,6 @@ using s16 = std::int16_t;
 using s32 = std::int32_t;
 using s64 = std::int64_t;
 
+constexpr size_t InvalidIndex = -1;
 
 #endif//CORTEX_UTILS_HPP

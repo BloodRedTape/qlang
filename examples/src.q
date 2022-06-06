@@ -1,21 +1,12 @@
 
 extern fn Print(int num): void;
 
-fn Variables(): void{
-    int n = 3;
-    int d = n;
-    {
-        int v = 2228;
-    }
-}
-
-fn UnaryOps(): void{
-    int ini = 3;
-    int np = ini++;
-    int nm = ini--;
-    int pn = ((++ini));
-    int mn = --ini;
-    int inv = (-ini);
+fn BinaryOps() : void {
+    int n = 4 * 3 * 4 * 56;
+    
+    int c = (4 + 3)*5;
+    
+    int d = 3 * (4 + 2) + 4 * 4 + 3;
 }
 
 fn Main(int argc): int{

@@ -85,6 +85,10 @@ enum class BinaryOperatorType {
 	MoreEqual
 };
 
+const char *BinaryOperatorTypeString(BinaryOperatorType op);
+
+u64 BinaryOperatorPriority(BinaryOperatorType type);
+
 u64 TryParseBinaryOperator(BinaryOperatorType &type, const TokenStream &stream, u64 start);
 
 struct BinaryOperatorExpression : Expression {
@@ -93,6 +97,13 @@ struct BinaryOperatorExpression : Expression {
 	ExpressionRef Right;
 
 	BinaryOperatorExpression(){ Type = ExpressionType::BinaryOperator; }
+
+	BinaryOperatorExpression(ExpressionRef left, ExpressionRef right, BinaryOperatorType op) {
+		Type = ExpressionType::BinaryOperator;
+		Left = std::move(left);
+		Right = std::move(right);
+		OpType = op;
+	}
 };
 
 struct CallExpression : Expression {

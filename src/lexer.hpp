@@ -25,7 +25,8 @@ enum class TokenType {
 	Equal,
 	Not,
 	Less,
-	More
+	More,
+	Exclamation
 };
 
 const char *TokenTypeString(TokenType type);

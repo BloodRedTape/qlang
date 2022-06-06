@@ -108,6 +108,16 @@ void AstPrinter::PrintExpression(std::ostream& stream, const ExpressionRef& expr
 		PrintExpression(stream, unary->Expr, table);
 		UnIndent();
 	}break;
+	case ExpressionType::BinaryOperator: {
+		BinaryOperatorExpression *binary = (BinaryOperatorExpression*)expr;
+		stream << BinaryOperatorTypeString(binary->OpType) << "Operator\n";
+		Indent();
+		PrintIndent(stream);
+		PrintExpression(stream, binary->Left, table);
+		PrintIndent(stream);
+		PrintExpression(stream, binary->Right, table);
+		UnIndent();
+	}break;
 	default:
 		assert(false);
 	}

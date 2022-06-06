@@ -27,6 +27,7 @@ const char* TokenTypeString(TokenType type){
 	case TokenType::Not: return "Not";
 	case TokenType::Less: return "Less";
 	case TokenType::More: return "More";
+	case TokenType::Exclamation: return "Exclamation";
 	default: return (assert(false), "Shit happens");
 	}
 }
@@ -193,7 +194,8 @@ static const std::pair<TokenType, char> s_SingleCharTokenTable[] = {
 	{TokenType::Equal,				'='},
 	{TokenType::Not,				'!'},
 	{TokenType::Less,				'<'},
-	{TokenType::More,				'>'}
+	{TokenType::More,				'>'},
+	{TokenType::Exclamation,		'!'}
 };
 
 std::vector<Token> Lexer::DoLexicalAnalysis(const std::string& sources, SymbolTable& table){
