@@ -6,38 +6,24 @@
 #include "ast/statement.hpp"
 #include "ast/ast.hpp"
 #include "ast_printer.hpp"
+#include <fstream>
 
-const char *src = R"(
-
-extern fn Print(int num): void;
-
-fn SomeWierdFunc(int a, int b): int{
-
-}
-
-fn Main(int argc): int{
-	int none;
-	int n = ((3));;;;
-    int neg = (-n);
-    int pi = n++;
-    int pd = n--;
-    int pri = ++n;
-    int prd = --n;
+std::string ReadEntireFile(const char* filepath) {
+    std::fstream file(filepath);
+    if(!file.is_open())
+        return {};
     
-    {
-        int d = 5;
-        int c = d;
-        {
-            n++;
-        }
-    }
+    file.seekg(0, std::ios::end);
+    size_t size = file.tellg();
+    file.seekg(0, std::ios::beg);
 
+    std::string content(size + 1, '\0');
+    file.read(content.data(), size);
+    return content;
 }
-
-)";
 
 void PrintTokenStream(const std::vector<Token>& tokens, const SymbolTable& table) {
-    for (Token token : tokens){
+    for (const Token &token : tokens){
         if(token.Type == TokenType::Identifier)
             Println("Token: % => %", TokenTypeString(token.Type), table[token.IdentifierIndex]);
         else if(token.Type == TokenType::IntegerLiteral)
@@ -49,6 +35,8 @@ void PrintTokenStream(const std::vector<Token>& tokens, const SymbolTable& table
 
 int main() {
     SymbolTable table;
+
+    std::string src = ReadEntireFile("../../../examples/src.q");
 
     std::vector<Token> tokens = Lexer::DoLexicalAnalysis(src, table);
 
