@@ -1,4 +1,5 @@
 #include "lexer.hpp"
+#include "error.hpp"
 #include <cmath>
 #include <sstream>
 #include <iostream>
@@ -209,6 +210,8 @@ std::vector<Token> Lexer::DoLexicalAnalysis(const std::string& sources, SymbolTa
 			chars.Consume();
 			continue;
 		}
+		if(chars.Peek() == '\0')
+			break;
 			
 		TokenType token_type;
 		if(TryConsumeSingleCharToken(chars, token_type)){
@@ -242,7 +245,7 @@ std::vector<Token> Lexer::DoLexicalAnalysis(const std::string& sources, SymbolTa
 			continue;
 		}
 		
-		assert(false);
+		return (Error("Lexer", "Unknown character '%' code=%", chars.Peek(), (int)chars.Peek()), std::vector<Token>());
 	}
 
 	return tokens;
