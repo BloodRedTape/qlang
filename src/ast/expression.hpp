@@ -85,6 +85,8 @@ enum class BinaryOperatorType {
 	MoreEqual
 };
 
+u64 TryParseBinaryOperator(BinaryOperatorType &type, const TokenStream &stream, u64 start);
+
 struct BinaryOperatorExpression : Expression {
 	BinaryOperatorType OpType = BinaryOperatorType::None;
 	ExpressionRef Left;

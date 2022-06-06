@@ -20,8 +20,7 @@ Ast Parser::Parse(TokenStream tokens){
 			continue;
 		}
 		
-		Error("Parser", "Can't parse top-level AST Node, Unexpected token '%'", TokenTypeString(tokens.Peek().Type));
-		break;
+		return (Error("Parser", "Can't parse top-level AST Node, Unexpected token '%'", TokenTypeString(tokens.Peek().Type)), Ast{});
 	}
 
 	return ast;

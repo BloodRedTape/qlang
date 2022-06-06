@@ -13,8 +13,9 @@ fn UnaryOps(): void{
     int ini = 3;
     int np = ini++;
     int nm = ini--;
-    int pn = ++ini;
+    int pn = ((++ini));
     int mn = --ini;
+    int inv = (-ini);
 }
 
 fn Main(int argc): int{
