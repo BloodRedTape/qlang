@@ -39,6 +39,8 @@ struct CompoundStatement: AstStatement{
 	CompoundStatement() {StmtType = StatementType::Compound; }
 
 	u64 TryParse(const TokenStream &stream, size_t start);
+
+	operator bool()const { return Statements.size(); }
 };
 
 struct VarStatement : AstStatement {
@@ -61,6 +63,8 @@ struct ExpressionStatement : AstStatement {
 	u64 TryParse(const TokenStream &stream, u64 start);
 };
 
+u64 TryParseCondition(ExpressionRef &expr, const TokenStream &stream, u64 start);
+
 struct WhileStatement : AstStatement {
 	ExpressionRef Condition;
 	CompoundStatement Body;
@@ -74,6 +78,16 @@ struct ReturnStatement : AstStatement {
 	ExpressionRef Result;
 
 	ReturnStatement() { StmtType = StatementType::Return; }
+
+	u64 TryParse(const TokenStream &stream, u64 start);
+};
+
+struct IfStatement : AstStatement {
+	ExpressionRef Condition;
+	CompoundStatement IfBody;
+	CompoundStatement ElseBody;
+
+	IfStatement() { StmtType = StatementType::If; }
 
 	u64 TryParse(const TokenStream &stream, u64 start);
 };

@@ -53,6 +53,12 @@ u64 AstStatement::TryParse(AstStatementRef& out_stmt, const TokenStream& stream,
 		if(count)
 			return (out_stmt = StmtNew<ReturnStatement>(std::move(ret)), count);
 	}break;
+	case StatementType::If: {
+		IfStatement branch;
+		u64 count = branch.TryParse(stream, start);
+		if(count)
+			return (out_stmt = StmtNew<IfStatement>(std::move(branch)), count);
+	}break;
 	default:
 		assert(false);
 	}
@@ -85,6 +91,17 @@ StatementType DeclStatementType(const TokenStream& stream, size_t start){
 		return StatementType::Return;
 
 	return StatementType::Expression;
+}
+
+u64 TryParseCondition(ExpressionRef& cond, const TokenStream& stream, u64 start){
+	u64 condition_count = stream.CountScopeSize(start, TokenType::OpenParentheses, TokenType::CloseParentheses);
+	if(!condition_count)
+		return Error("Condition", "Condition's expression is broken");
+	u64 expr_count = Expression::TryParse(cond, stream, start + 1, condition_count - 2);
+
+	if(!expr_count || expr_count + 2 != condition_count)
+		return Error("Condition", "Condition's expression is broken");
+	return condition_count;
 }
 
 u64 CompoundStatement::TryParse(const TokenStream& stream, size_t start){
@@ -156,11 +173,9 @@ u64 WhileStatement::TryParse(const TokenStream& stream, u64 start){
 	if(!keyword.IsKeyword(KeywordType::While))
 		return Error("WhileStatement", "should start with 'while' keyword");
 	
-	u64 condition_count = stream.CountScopeSize(start + 1, TokenType::OpenParentheses, TokenType::CloseParentheses);
+	u64 condition_count = TryParseCondition(Condition, stream, start + 1);
 
-	u64 expr_count = Expression::TryParse(Condition, stream, start + 2, condition_count - 2);
-
-	if(!expr_count)
+	if(!condition_count)
 		return Error("WhileStatement", "Can't parse condition expr");
 
 	u64 body_count = Body.TryParse(stream, start + 1 + condition_count);
@@ -178,4 +193,31 @@ u64 ReturnStatement::TryParse(const TokenStream& stream, u64 start){
 	u64 result_count = ExpressionStatement::TryParse(Result, stream, start + 1);
 	
 	return result_count + 1;
+}
+
+u64 IfStatement::TryParse(const TokenStream& stream, u64 start){
+	Token if_keyword = stream.Peek(start + 0);
+	if(!if_keyword.IsKeyword(KeywordType::If))
+		return Error("IfStatement", "should start with 'if' keyword");
+	
+	u64 condition_count = TryParseCondition(Condition, stream, start + 1);
+
+	if(!condition_count)
+		return Error("IfStatement", "can't parse condition");
+
+	u64 if_body_count = IfBody.TryParse(stream, start + 1 + condition_count);
+
+	if(!if_body_count)
+		return Error("IfStatement", "can't if-condition body");
+	
+	Token else_keyword = stream.Peek(start + 1 + condition_count + if_body_count);
+	u64 else_body_count = 0;
+
+	if(else_keyword.IsKeyword(KeywordType::Else)){
+		else_body_count = ElseBody.TryParse(stream, start + 1 + condition_count + if_body_count + 1);
+		if(!else_body_count)
+			return Error("IfStatement", "can't else-condition body");
+	}
+
+	return 1 + condition_count + if_body_count + else_body_count + else_keyword.IsKeyword(KeywordType::Else);
 }

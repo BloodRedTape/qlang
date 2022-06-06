@@ -104,6 +104,20 @@ void AstPrinter::PrintStatement(std::ostream& stream, const AstStatement *stmt, 
 			UnIndent();
 		}
 	}break;
+	case StatementType::If: {
+		IfStatement *branch= (IfStatement*)stmt;
+		stream << "IfStatement\n";
+		Indent();
+		PrintIndent(stream);	
+		PrintExpression(stream, branch->Condition, table);
+		PrintIndent(stream);	
+		PrintStatement(stream, &branch->IfBody, table);
+		if (branch->ElseBody) {
+			PrintIndent(stream);	
+			PrintStatement(stream, &branch->ElseBody, table);
+		}
+		UnIndent();
+	}break;
 	default:
 		assert(false);
 	}
