@@ -6,6 +6,7 @@
 #include "ast/statement.hpp"
 #include "ast/ast.hpp"
 #include "ast_printer.hpp"
+#include "semantic.hpp"
 #include <fstream>
 
 std::string ReadEntireFile(const char* filepath) {
@@ -43,8 +44,8 @@ int main() {
     PrintTokenStream(tokens, table);
 
     std::vector<AstNodeRef> ast = Parser::Parse(tokens);
-    
-    //PrintAst(ast, table);
+
 
     AstPrinter().Print(std::cout, ast, table);
+    return !SemanticAnalyzer::Analyze(ast, table);
 }

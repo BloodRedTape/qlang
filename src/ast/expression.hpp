@@ -41,11 +41,12 @@ struct IntegerLiteralExpression : Expression {
 };
 
 struct VariableExpression : Expression {
-	TokenAtom IdentifierIndex = InvalidTokenAtom;
+	Token Identifier;
 
-	VariableExpression(TokenAtom identifier) {
+	VariableExpression(Token identifier):
+		Identifier(identifier)
+	{
 		Type = ExpressionType::Variable; 
-		IdentifierIndex = identifier;
 	}
 };
 

@@ -129,7 +129,7 @@ u64 ParseSubexpression(ExpressionRef& expr, const TokenStream& stream, u64 start
 	&& stream.Peek(start + 2).IsType(TokenType::Identifier)) {
 		expr = ExprNew<UnaryOperatorExpression>(
 			UnaryOperatorType::PreDecrement,
-			ExprNew<VariableExpression>(stream.Peek(start + 2).IdentifierIndex)
+			ExprNew<VariableExpression>(stream.Peek(start + 2))
 		);
 		return 3;
 	}
@@ -137,7 +137,7 @@ u64 ParseSubexpression(ExpressionRef& expr, const TokenStream& stream, u64 start
 	&& stream.Peek(start + 2).IsType(TokenType::Identifier)) {
 		expr = ExprNew<UnaryOperatorExpression>(
 			UnaryOperatorType::PreIncrement,
-			ExprNew<VariableExpression>(stream.Peek(start + 2).IdentifierIndex)
+			ExprNew<VariableExpression>(stream.Peek(start + 2))
 		);
 		return 3;
 	}
@@ -145,7 +145,7 @@ u64 ParseSubexpression(ExpressionRef& expr, const TokenStream& stream, u64 start
 	&& stream.HasRepeated(TokenType::Minus, 2, start + 1)){
 		expr = ExprNew<UnaryOperatorExpression>(
 			UnaryOperatorType::PostDecrement,
-			ExprNew<VariableExpression>(stream.Peek(start).IdentifierIndex)
+			ExprNew<VariableExpression>(stream.Peek(start))
 		);
 		return 3;
 	}
@@ -153,7 +153,7 @@ u64 ParseSubexpression(ExpressionRef& expr, const TokenStream& stream, u64 start
 	&& stream.HasRepeated(TokenType::Plus, 2, start + 1)){
 		expr = ExprNew<UnaryOperatorExpression>(
 			UnaryOperatorType::PostIncrement,
-			ExprNew<VariableExpression>(stream.Peek(start).IdentifierIndex)
+			ExprNew<VariableExpression>(stream.Peek(start))
 		);
 		return 3;
 	}
@@ -210,7 +210,7 @@ u64 ParseSubexpression(ExpressionRef& expr, const TokenStream& stream, u64 start
 	if (stream.Peek(start + 0).IsType(TokenType::Identifier)
 	&& !stream.Peek(start + 1).IsType(TokenType::OpenParentheses)
 	&& !stream.Peek(start + 1).IsType(TokenType::OpenBrackets)) {
-		expr = ExprNew<VariableExpression>(stream.Peek(start).IdentifierIndex);
+		expr = ExprNew<VariableExpression>(stream.Peek(start));
 		return 1;
 	}
 
@@ -261,12 +261,7 @@ struct ExpressionPrecedence{
 
 };
 
-u64 Expression::TryParse(ExpressionRef& expr, const TokenStream& stream, u64 start, u64 length){
-	for (u64 i = 0; i < length; i++) {
-		Print("%", stream.Peek(start + i));
-	}
-	Print("\n");
-	
+u64 Expression::TryParse(ExpressionRef& expr, const TokenStream& stream, u64 start, u64 length){	
 	// Chainable expressions parsing
 	
 	ExpressionPrecedence precedence;

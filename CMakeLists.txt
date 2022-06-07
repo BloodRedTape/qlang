@@ -10,7 +10,7 @@ add_executable(qlang
 	"./src/ast/function.cpp"
 	"./src/ast/statement.cpp"
 	"./src/ast/expression.cpp"
- "src/ast_printer.hpp" "src/ast_printer.cpp")
+ "src/ast_printer.hpp" "src/ast_printer.cpp"        "src/semantic.cpp")
 
 target_compile_features(qlang PUBLIC cxx_std_17)
 
