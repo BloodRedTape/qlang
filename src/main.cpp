@@ -47,5 +47,5 @@ int main() {
 
 
     AstPrinter().Print(std::cout, ast, table);
-    return !SemanticAnalyzer::Analyze(ast, table);
+    return !SemanticAnalyzer(ast, table).Analyze();
 }

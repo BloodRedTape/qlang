@@ -175,10 +175,13 @@ u64 ParseSubexpression(ExpressionRef& expr, const TokenStream& stream, u64 start
 
 	if (stream.Peek(start + 0).IsType(TokenType::Identifier)
 	&&  stream.Peek(start + 1).IsType(TokenType::OpenParentheses)) {
-		CallExpression call;
+		CallExpression call(stream.Peek(start + 0));
 		
 		u64 scope_length = stream.CountScopeSize(start + 1, TokenType::OpenParentheses, TokenType::CloseParentheses);
 		assert(scope_length <= length - 1);
+
+		if(stream.Peek(start + 2).IsType(TokenType::CloseParentheses))
+			return (expr = ExprNew<CallExpression>(std::move(call)), 3);
 		
 		u64 offset = 2;
 		for (;;) {
@@ -274,7 +277,7 @@ u64 Expression::TryParse(ExpressionRef& expr, const TokenStream& stream, u64 sta
 			if(offset == length) 
 				break;
 			else
-				Error("Expression", "Can't parse subexpression");
+				return Error("Expression", "Can't parse subexpression starts from token '%'", stream.Peek(start + offset));
 		} else {
 			precedence.Exprs.push_back(std::move(expr));
 			offset += expr_count;

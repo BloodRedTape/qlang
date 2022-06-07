@@ -12,10 +12,9 @@ fn Factorial(int num) : int {
 fn Main(int argc): int{
 		
 	int i = 0;
-	while(d < 5){
+	while(i < 5){
 		Print(Factorial(i));
 		i++;
 	}
-	asdf;
 	return 0;
 }

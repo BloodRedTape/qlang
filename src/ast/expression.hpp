@@ -108,7 +108,10 @@ struct BinaryOperatorExpression : Expression {
 };
 
 struct CallExpression : Expression {
+	Token Identifier;
 	std::vector<ExpressionRef> Args;
 
-	CallExpression() { Type = ExpressionType::Call; }
+	CallExpression(Token identifier):
+		Identifier(identifier)
+	{ Type = ExpressionType::Call; }
 };
