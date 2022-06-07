@@ -30,6 +30,23 @@ const char* BinaryOperatorTypeString(BinaryOperatorType op){
 	}
 }
 
+const char* BinaryOperatorTokenString(BinaryOperatorType op){
+	switch (op) {
+	case BinaryOperatorType::Assign: return "=";
+	case BinaryOperatorType::Add: return "+";
+	case BinaryOperatorType::Sub: return "-";
+	case BinaryOperatorType::Mult: return "*";
+	case BinaryOperatorType::Div: return "/";
+	case BinaryOperatorType::IsEqual: return "==";
+	case BinaryOperatorType::IsNotEqual: return "!=";
+	case BinaryOperatorType::Less: return "<";
+	case BinaryOperatorType::LessEqual: return "<=";
+	case BinaryOperatorType::More: return ">";
+	case BinaryOperatorType::MoreEqual: return ">=";
+	default: return (assert(false), "Shit happens");
+	}
+}
+
 u64 BinaryOperatorPriority(BinaryOperatorType type){
 	switch (type) {
 	case BinaryOperatorType::Assign: return 1;

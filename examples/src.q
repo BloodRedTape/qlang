@@ -1,5 +1,5 @@
 
-extern fn Print(int num): void;
+extern fn Println(int num): void;
 
 fn Factorial(int num) : int {
 	if (num == 0) {
@@ -9,11 +9,10 @@ fn Factorial(int num) : int {
 	}
 }
 
-fn Main(int argc): int{
-		
+fn Main(): int{
 	int i = 0;
 	while(i < 5){
-		Print(Factorial(i));
+		Println(Factorial(i));
 		i++;
 	}
 	return 0;

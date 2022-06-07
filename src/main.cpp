@@ -8,6 +8,7 @@
 #include "ast_printer.hpp"
 #include "semantic.hpp"
 #include <fstream>
+#include "c_codegen.hpp"
 
 std::string ReadEntireFile(const char* filepath) {
     std::fstream file(filepath);
@@ -34,10 +35,21 @@ void PrintTokenStream(const std::vector<Token>& tokens, const SymbolTable& table
     }
 }
 
+std::string ToCCodegenFilepath(std::string filepath) {
+    filepath[filepath.size() - 1] = 'c';
+    return filepath + "pp";
+}
+
+std::string ToEXEFilepath(std::string filepath) {
+    filepath[filepath.size() - 1] = 'e';
+    return filepath + "xe";
+}
+
 int main() {
+    const char *src_filepath = "../../../examples/src.q";
     SymbolTable table;
 
-    std::string src = ReadEntireFile("../../../examples/src.q");
+    std::string src = ReadEntireFile(src_filepath);
 
     std::vector<Token> tokens = Lexer::DoLexicalAnalysis(src, table);
 
@@ -47,5 +59,16 @@ int main() {
 
 
     AstPrinter().Print(std::cout, ast, table);
-    return !SemanticAnalyzer(ast, table).Analyze();
+    if(!SemanticAnalyzer(ast, table).Analyze())
+        return 1;
+
+    std::string codegen = CCodegen(ast, table).Generate();
+    Print("%", codegen);
+    
+    std::string codegen_path = ToCCodegenFilepath(src_filepath);
+    {
+        std::ofstream codegen_file(codegen_path);
+        assert(codegen_file.is_open());
+        codegen_file << codegen;
+    }
 }

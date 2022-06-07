@@ -88,6 +88,8 @@ enum class BinaryOperatorType {
 
 const char *BinaryOperatorTypeString(BinaryOperatorType op);
 
+const char *BinaryOperatorTokenString(BinaryOperatorType op);
+
 u64 BinaryOperatorPriority(BinaryOperatorType type);
 
 u64 TryParseBinaryOperator(BinaryOperatorType &type, const TokenStream &stream, u64 start);
