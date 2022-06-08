@@ -28,6 +28,7 @@ const char* TokenTypeString(TokenType type){
 	case TokenType::Less: return "Less";
 	case TokenType::More: return "More";
 	case TokenType::Exclamation: return "Exclamation";
+	case TokenType::BoolLiteral: return "BoolLiteral";
 	default: return (assert(false), "Shit happens");
 	}
 }
@@ -42,6 +43,7 @@ const char* KeywordTypeString(KeywordType type){
 	case KeywordType::Return: return "return";
 	case KeywordType::While: return "while";
 	case KeywordType::Void: return "void";
+	case KeywordType::Bool: return "bool";
 	default: return (assert(false), "Shit happens");
 	}
 }
@@ -56,7 +58,8 @@ bool Token::IsType(TokenType type)const{
 
 bool Token::IsDataType() const{
 	return IsKeyword(KeywordType::Int)
-		|| IsKeyword(KeywordType::Void);
+		|| IsKeyword(KeywordType::Void)
+		|| IsKeyword(KeywordType::Bool);
 }
 
 Token Token::Regular(TokenType type, u64 line){
@@ -83,6 +86,13 @@ Token Token::Keyword(KeywordType keyword_index, u64 line){
 Token Token::IntegerLiteral(u64 value, u64 line){
 	Token token = {TokenType::IntegerLiteral};
 	token.IntegerLiteralValue = value;
+	token.Line = line;
+	return token;
+}
+
+Token Token::BoolLiteral(u64 value, u64 line){
+	Token token = {TokenType::BoolLiteral};
+	token.BoolLiteralValue = value;
 	token.Line = line;
 	return token;
 }
@@ -240,6 +250,10 @@ std::vector<Token> Lexer::DoLexicalAnalysis(const std::string& sources, SymbolTa
 
 			if(keyword != KeywordType::Count)
 				tokens.push_back(Token::Keyword(keyword, line));
+			else if(word == "true")
+				tokens.push_back(Token::BoolLiteral(1, line));
+			else if(word == "false")
+				tokens.push_back(Token::BoolLiteral(0, line));
 			else
 				tokens.push_back(Token::Identifier(table.Add(std::move(word)), line));
 

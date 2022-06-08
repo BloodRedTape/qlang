@@ -10,6 +10,10 @@ fn Factorial(int num) : int {
 }
 
 fn Main(): int{
+	while (true) {
+		Println(3);
+	}
+
 	int i = 0;
 	while(i < 5){
 		Println(Factorial(i));

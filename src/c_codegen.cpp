@@ -121,6 +121,10 @@ std::string CCodegen::GenerateExpression(const Expression& expr){
 		const auto &lit = (const IntegerLiteralExpression&)expr;
 		return std::to_string((s64)lit.Value);
 	}
+	case ExpressionType::BoolLiteral: {
+		const auto &lit = (const BoolLiteralExpression&)expr;
+		return lit.Value ? "true" : "false";
+	}
 	case ExpressionType::Variable: {
 		const auto &var = (const VariableExpression &)expr;
 		return m_Table[var.Identifier.IdentifierIndex];

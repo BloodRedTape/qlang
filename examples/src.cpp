@@ -22,6 +22,10 @@ return num*Factorial(num-1);
 }
 }
 s64 Main(){
+while(true)
+{
+Println(3);
+}
 s64 i = 0;
 while(i<5)
 {

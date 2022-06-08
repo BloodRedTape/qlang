@@ -26,7 +26,8 @@ enum class TokenType {
 	Not,
 	Less,
 	More,
-	Exclamation
+	Exclamation,
+	BoolLiteral
 };
 
 const char *TokenTypeString(TokenType type);
@@ -40,6 +41,8 @@ enum class KeywordType {
 	Return	= 5,
 	While	= 6,
 	Void    = 7,
+	//String  = 8,
+	Bool    = 8,
 	//While = 7
 	Count
 };
@@ -56,6 +59,7 @@ struct Token {
 		KeywordType KeywordIndex;
 		TokenAtom IdentifierIndex;
 		u64 IntegerLiteralValue;
+		u64 BoolLiteralValue;
 	};
 	u64 Line = 0;
 
@@ -72,6 +76,8 @@ struct Token {
 	static Token Keyword(KeywordType keyword_index, u64 line);
 
 	static Token IntegerLiteral(u64 value, u64 line);
+
+	static Token BoolLiteral(u64 value, u64 line);
 
 	friend std::ostream& operator<<(std::ostream& stream, const Token& token);
 };
