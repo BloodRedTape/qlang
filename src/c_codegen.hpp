@@ -32,3 +32,7 @@ private:
 };
 
 
+class CCompiler {
+public:
+	static bool Compile(const std::string &src);
+};

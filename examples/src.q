@@ -2,7 +2,7 @@
 extern fn Println(int num): void;
 
 fn StringTest() :void {
-	string str = "Hello World";
+	string str = "Hello World\n";
 }
 
 fn Factorial(int num) : int {

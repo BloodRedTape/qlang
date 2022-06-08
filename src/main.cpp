@@ -71,4 +71,8 @@ int main() {
         assert(codegen_file.is_open());
         codegen_file << codegen;
     }
+
+    return CCompiler::Compile(
+        codegen_path
+    );
 }

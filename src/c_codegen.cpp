@@ -177,3 +177,11 @@ int main(int argc, char **argv){
 }
 )";
 }
+
+bool CCompiler::Compile(const std::string& src){
+	std::string command = R"(call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" && "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\Hostx64\x64\cl.exe" /EHsc )" + src;
+	
+	if(system(command.c_str()))
+		return Error("CC", "Can't compile");
+	return true;
+}

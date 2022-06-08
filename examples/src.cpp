@@ -13,7 +13,7 @@ void StringTest();
 s64 Factorial(s64 num);
 s64 Main();
 void StringTest(){
-const char * str = "Hello World";
+const char * str = "Hello World\n";
 }
 s64 Factorial(s64 num){
 if(num==0)
