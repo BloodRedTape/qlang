@@ -45,25 +45,25 @@ std::string ToEXEFilepath(std::string filepath) {
     return filepath + "xe";
 }
 
-int main() {
-    const char *src_filepath = "../../../examples/src.q";
+int main(int argc, char **argv) {
+    const char *src_filepath = (argc == 2 ? argv[1] : "../../../examples/src.q");
     SymbolTable table;
 
     std::string src = ReadEntireFile(src_filepath);
 
     std::vector<Token> tokens = Lexer::DoLexicalAnalysis(src, table);
 
-    PrintTokenStream(tokens, table);
+    //PrintTokenStream(tokens, table);
 
     std::vector<AstNodeRef> ast = Parser::Parse(tokens);
 
 
-    AstPrinter().Print(std::cout, ast, table);
+    //AstPrinter().Print(std::cout, ast, table);
     if(!SemanticAnalyzer(ast, table).Analyze())
         return 1;
 
     std::string codegen = CCodegen(ast, table).Generate();
-    Print("%", codegen);
+    //Print("%", codegen);
     
     std::string codegen_path = ToCCodegenFilepath(src_filepath);
     {

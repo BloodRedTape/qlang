@@ -5,7 +5,7 @@ u64 FunctionParamDecl::TryParse(const TokenStream& stream, u64 start){
 	Token type		 = stream.Peek(start + 0);
 	Token identifier = stream.Peek(start + 1);
 
-	if(!type.IsKeyword(KeywordType::Int) || !identifier.IsType(TokenType::Identifier))
+	if(!type.IsFunctionReturnType() || !identifier.IsType(TokenType::Identifier))
 		return 0;
 
 	DataType = type.KeywordIndex;
