@@ -1,6 +1,10 @@
 
 extern fn Println(int num): void;
 
+fn StringTest() :void {
+	string str = "Hello World";
+}
+
 fn Factorial(int num) : int {
 	if (num == 0) {
 		return 1;
@@ -10,9 +14,8 @@ fn Factorial(int num) : int {
 }
 
 fn Main(): int{
-	while (true) {
-		Println(3);
-	}
+	bool shit = false;
+	bool shit2 = true;
 
 	int i = 0;
 	while(i < 5){

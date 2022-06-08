@@ -190,10 +190,16 @@ u64 ParseSubexpression(ExpressionRef& expr, const TokenStream& stream, u64 start
 		return 1;
 	}
 
+	if (stream.Peek(start).IsType(TokenType::StringLiteral)) {
+		expr = ExprNew<StringLiteralExpression>(stream.Peek(start).StringLiteralIndex);
+		return 1;
+	}
+
 	if (stream.Peek(start).IsType(TokenType::BoolLiteral)) {
 		expr = ExprNew<BoolLiteralExpression>(stream.Peek(start).BoolLiteralValue);
 		return 1;
 	}
+
 
 	if (stream.Peek(start + 0).IsType(TokenType::Identifier)
 	&&  stream.Peek(start + 1).IsType(TokenType::OpenParentheses)) {

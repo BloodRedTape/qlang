@@ -9,8 +9,12 @@ void Println(s64 num){
 }
 
 void Println(s64 num);
+void StringTest();
 s64 Factorial(s64 num);
 s64 Main();
+void StringTest(){
+const char * str = "Hello World";
+}
 s64 Factorial(s64 num){
 if(num==0)
 {
@@ -22,10 +26,8 @@ return num*Factorial(num-1);
 }
 }
 s64 Main(){
-while(true)
-{
-Println(3);
-}
+bool shit = false;
+bool shit2 = true;
 s64 i = 0;
 while(i<5)
 {

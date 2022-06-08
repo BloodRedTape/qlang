@@ -41,6 +41,8 @@ const char* ToCTypeSpecifier(KeywordType keyword) {
 	switch (keyword) {
 	case KeywordType::Void:	return "void";
 	case KeywordType::Int:	return "s64";
+	case KeywordType::Bool:	return "bool";
+	case KeywordType::String: return "const char *";
 	default: return (assert(false), "Shit happens");
 	}
 }
@@ -124,6 +126,10 @@ std::string CCodegen::GenerateExpression(const Expression& expr){
 	case ExpressionType::BoolLiteral: {
 		const auto &lit = (const BoolLiteralExpression&)expr;
 		return lit.Value ? "true" : "false";
+	}
+	case ExpressionType::StringLiteral: {
+		const auto &lit = (const StringLiteralExpression&)expr;
+		return '"' + m_Table[lit.Value] + '"';
 	}
 	case ExpressionType::Variable: {
 		const auto &var = (const VariableExpression &)expr;

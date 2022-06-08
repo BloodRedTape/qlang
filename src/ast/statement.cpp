@@ -81,7 +81,7 @@ StatementType DeclStatementType(const TokenStream& stream, size_t start){
 	if(first.IsKeyword(KeywordType::If))
 		return StatementType::If;
 
-	if(first.IsDataType())
+	if(first.IsValuableType())
 		return StatementType::Var;
 	
 	if(first.IsKeyword(KeywordType::While))
@@ -133,8 +133,8 @@ u64 VarStatement::TryParse(const TokenStream& stream, u64 start){
 	Token type		 = stream.Peek(start + 0);
 	Token identifier = stream.Peek(start + 1);
 
-	if(!type.IsKeyword(KeywordType::Int))
-		return Error("VarStatement", "Can't parse, expected data type, got '%'", type);
+	if(!type.IsValuableType())
+		return Error("VarStatement", "Can't parse, expected ValuableType, got '%'", type);
 	if(!identifier.IsType(TokenType::Identifier))
 		return Error("VarStatement", "Can't parse, expected identifier, got '%'", type);
 

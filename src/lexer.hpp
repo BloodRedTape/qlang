@@ -27,7 +27,8 @@ enum class TokenType {
 	Less,
 	More,
 	Exclamation,
-	BoolLiteral
+	BoolLiteral,
+	StringLiteral
 };
 
 const char *TokenTypeString(TokenType type);
@@ -41,8 +42,8 @@ enum class KeywordType {
 	Return	= 5,
 	While	= 6,
 	Void    = 7,
-	//String  = 8,
 	Bool    = 8,
+	String  = 9,
 	//While = 7
 	Count
 };
@@ -60,6 +61,7 @@ struct Token {
 		TokenAtom IdentifierIndex;
 		u64 IntegerLiteralValue;
 		u64 BoolLiteralValue;
+		TokenAtom StringLiteralIndex;
 	};
 	u64 Line = 0;
 
@@ -67,7 +69,9 @@ struct Token {
 
 	bool IsType(TokenType type)const;
 
-	bool IsDataType()const;
+	bool IsFunctionReturnType()const;
+
+	bool IsValuableType()const;
 	
 	static Token Regular(TokenType type, u64 line);
 
@@ -78,6 +82,8 @@ struct Token {
 	static Token IntegerLiteral(u64 value, u64 line);
 
 	static Token BoolLiteral(u64 value, u64 line);
+
+	static Token StringLiteral(TokenAtom value, u64 line);
 
 	friend std::ostream& operator<<(std::ostream& stream, const Token& token);
 };
@@ -126,6 +132,8 @@ public:
 	static bool TryConsumeSingleCharToken(CharacterStream &stream, TokenType &token);
 
 	static bool TryConsumeInteger(CharacterStream &stream, u64 &number);
+
+	static bool TryConsumeStringLiteral(CharacterStream &stream, std::string &value);
 
 	static std::string ConsumeWord(CharacterStream &stream);
 };

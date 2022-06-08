@@ -29,6 +29,7 @@ const char* TokenTypeString(TokenType type){
 	case TokenType::More: return "More";
 	case TokenType::Exclamation: return "Exclamation";
 	case TokenType::BoolLiteral: return "BoolLiteral";
+	case TokenType::StringLiteral: return "StringLiteral";
 	default: return (assert(false), "Shit happens");
 	}
 }
@@ -44,6 +45,7 @@ const char* KeywordTypeString(KeywordType type){
 	case KeywordType::While: return "while";
 	case KeywordType::Void: return "void";
 	case KeywordType::Bool: return "bool";
+	case KeywordType::String: return "string";
 	default: return (assert(false), "Shit happens");
 	}
 }
@@ -56,10 +58,14 @@ bool Token::IsType(TokenType type)const{
 	return Type == type;
 }
 
-bool Token::IsDataType() const{
+bool Token::IsFunctionReturnType() const{
+	return IsValuableType() || IsKeyword(KeywordType::Void);
+}
+
+bool Token::IsValuableType() const{
 	return IsKeyword(KeywordType::Int)
-		|| IsKeyword(KeywordType::Void)
-		|| IsKeyword(KeywordType::Bool);
+		|| IsKeyword(KeywordType::Bool)
+		|| IsKeyword(KeywordType::String);
 }
 
 Token Token::Regular(TokenType type, u64 line){
@@ -93,6 +99,13 @@ Token Token::IntegerLiteral(u64 value, u64 line){
 Token Token::BoolLiteral(u64 value, u64 line){
 	Token token = {TokenType::BoolLiteral};
 	token.BoolLiteralValue = value;
+	token.Line = line;
+	return token;
+}
+
+Token Token::StringLiteral(TokenAtom value, u64 line){
+	Token token = {TokenType::StringLiteral};
+	token.StringLiteralIndex = value;
 	token.Line = line;
 	return token;
 }
@@ -236,6 +249,12 @@ std::vector<Token> Lexer::DoLexicalAnalysis(const std::string& sources, SymbolTa
 			continue;
 		}
 
+		std::string str_literal;
+		if (TryConsumeStringLiteral(chars, str_literal)) {
+			tokens.push_back(Token::StringLiteral(table.Add(str_literal), line));
+			continue;
+		}
+
 		std::string word = ConsumeWord(chars);
 
 		if(word.size()){
@@ -287,6 +306,22 @@ bool Lexer::TryConsumeInteger(CharacterStream& chars, u64& number){
 	}
 
 	return digits;
+}
+
+bool Lexer::TryConsumeStringLiteral(CharacterStream& stream, std::string& value){
+	if(stream.Peek() != '"')
+		return false;
+
+	stream.Consume();
+
+	while(stream.Peek() != '"'){
+		value.push_back(stream.Peek());
+		stream.Consume();
+	}
+
+	stream.Consume();
+
+	return true;
 }
 
 std::string Lexer::ConsumeWord(CharacterStream& chars){

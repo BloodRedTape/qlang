@@ -58,7 +58,7 @@ u64 AstFunctionDeclaration::TryParse(const TokenStream& stream, u64 start){
 
 	Token ret = stream.Peek(start + offset++);
 
-	if(!ret.IsDataType())
+	if(!ret.IsFunctionReturnType())
 		return Error("Function", "'%' should be a data type", ret);
 
 	ReturnType = ret.KeywordIndex;

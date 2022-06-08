@@ -134,6 +134,10 @@ void AstPrinter::PrintExpression(std::ostream& stream, const ExpressionRef& expr
 		BoolLiteralExpression *literal = (BoolLiteralExpression*)expr;
 		stream << "BoolLiteral: $" << (literal->Value ? "true" : "false") << '\n';
 	}break;
+	case ExpressionType::StringLiteral: {
+		StringLiteralExpression *literal = (StringLiteralExpression*)expr;
+		stream << "BoolLiteral: $'" << (table[literal->Value]) << "'\n";
+	}break;
 	case ExpressionType::Variable: {
 		VariableExpression *var = (VariableExpression*)expr;
 		stream << "Variable<>: " << table[var->Identifier.IdentifierIndex]<< '\n';

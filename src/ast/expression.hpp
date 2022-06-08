@@ -7,6 +7,7 @@ enum class ExpressionType {
 	None = 0,
 	IntegerLiteral,
 	BoolLiteral,
+	StringLiteral,
 	Variable,
 	UnaryOperator,
 	BinaryOperator,
@@ -47,6 +48,16 @@ struct BoolLiteralExpression : Expression {
 	BoolLiteralExpression(u64 value) {
 		Type = ExpressionType::BoolLiteral; 
 		ResultType = KeywordType::Bool;
+		Value = value;
+	}
+};
+
+struct StringLiteralExpression : Expression {
+	TokenAtom Value = 0;
+
+	StringLiteralExpression(TokenAtom value) {
+		Type = ExpressionType::StringLiteral; 
+		ResultType = KeywordType::String;
 		Value = value;
 	}
 };
